@@ -1,0 +1,13 @@
+C:\Users\jorge\Documents\Universidad\UGR\1erSemestre\IC\proyecto\perceptron\venv\Scripts\python.exe C:/Users/jorge/Documents/Universidad/UGR/1erSemestre/IC/proyecto/perceptron/main.py
+[  5219.65490196  19372.90196078  15747.19215686  -6345.01176471
+  -5092.25098039 -10880.0627451   -6156.18039216   9910.47058824
+   -225.0745098    4574.8       ]
+
+Process finished with exit code 0
+
+
+C:\Users\jorge\Documents\Universidad\UGR\1erSemestre\IC\proyecto\perceptron\venv\Scripts\python.exe C:/Users/jorge/Documents/Universidad/UGR/1erSemestre/IC/proyecto/perceptron/main.py
+[ 1331012.  4940090.  4015534. -1617978. -1298524. -2774416. -1569826.
+  2527170.   -57394.  1166574.]
+
+Process finished with exit code 0
