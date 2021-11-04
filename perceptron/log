@@ -1,8 +1,0 @@
-1. Instalar la libreria MNIST en el venv activando el entorno virtual --> https://programwithus.com/learn/python/pip-virtualenv-windows
-
-2. Leer los datos  --> libreria http://rasbt.github.io/mlxtend/
-
-3. Generar el perceptron
-
-4. Salida:
-
