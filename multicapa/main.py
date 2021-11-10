@@ -18,10 +18,10 @@ def load_train():
 
 train, etiq = load_train()
 
-rn = RedNeuronal([784, 5, 5])
+rn = RedNeuronal([10, 5, 5], train)
 
 salida = rn.entrenamiento(train, etiq, 0.2, 5)
 
 print(salida)
 
-jq = RedNeuronal([784, 20, 20])
+jq = RedNeuronal([10, 20, 20])

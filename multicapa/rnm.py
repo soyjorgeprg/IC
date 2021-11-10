@@ -27,11 +27,15 @@ def derivada_sigmoide(x):
 
 class RedNeuronal:
 
-    def __init__(self, layers_def):
-        # self.w = np.zeros(shape=(10, 784))
+    def __init__(self, layers_def, datos):
         self.learning_rate = 0.02
-        self.layers = [Capa(num_neuronas) for num_neuronas in layers_def]
-        # self.layers = list(reversed(layers_def))
+        self.datos = datos
+        self.layers = []
+        for num_capa in range(len(layers_def)):
+            if num_capa == 0:
+                self.layers.append(Capa(layers_def[num_capa], self.datos.shape[1]))
+            else:
+                self.layers.append(Capa(layers_def[num_capa], layers_def[num_capa - 1]))
         self.num_layers = len(self.layers)
 
     def normalizar(self, imagenes):
@@ -44,29 +48,16 @@ class RedNeuronal:
         return salida
 
     def prediccion(self, imagen):
-        # salida = np.zeros(10*self.num_layers).reshape(self.num_layers, 10)
         salida = [imagen]
-        for i in range(self.num_layers):
-            salida.append([])
-        for layer in range(self.num_layers + 1):
-            for num in range(self.num_layers):
-                aux = [sigmoide(np.dot(self.layers[num].w, salida[layer]))]
-                salida[layer + 1] = np.append(salida[layer + 1], aux)
+        for i in range(self.num_layers): salida.append([])
+        for layer in range(self.num_layers):
+            salida[layer + 1] = np.append(salida[layer + 1], self.layers[layer].prediccionSigmoide(salida[layer]))
         return salida
 
-    def activacion(self, x, perceptrones):
-        salida = np.zeros(10)
-        for i in range(0, perceptrones):
-            salida[i] = 1.0 if (x[i] > 0) else 0.0
-        return salida
-
-    def correccion(self, y, x, label, perceptrones):
-        for i in range(0, perceptrones):
-            if y[i] == 0 and label == i:
-                self.w[i] += x
-            elif y[i] == 1 and label != i:
-                self.w[i] -= x
-        return self.w
+    def backpropagation(self, y, x, label):
+        for layer in range(self.num_layers):
+            self.layers[layer].correccion(y[layer], x, label)
+            pass
 
     def entrenamiento(self, imagen, labels, lr, numEpoch):
         lr = self.learning_rate
@@ -74,8 +65,7 @@ class RedNeuronal:
         for epoch in range(numEpoch):
             # for img, label in zip(entrada, labels):
             for img, label in zip(imagen, labels):
-                z = self.prediccion(img)
-                y = self.activacion(z, 10)
-                self.w = self.correccion(y, img, label, 10)
+                y = self.prediccion(img)
+                self.backpropagation(y, img, label)
         return self.w
 
