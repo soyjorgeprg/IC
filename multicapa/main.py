@@ -19,8 +19,8 @@ def load_train():
 def traduccion(resultados):
     etiquetas = []
     for x in resultados:
-        max_value = max(x)
-        max_index = list(x).index(max_value)
+        max_value = max(x[-1])
+        max_index = list(x[-1]).index(max_value)
         etiquetas.append(max_index)
 
     return etiquetas
