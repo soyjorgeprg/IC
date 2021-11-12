@@ -24,6 +24,11 @@ def sigmoide(x):
 def derivada_sigmoide(x):
     return sigmoide(x) * (1 - sigmoide(x))
 
+def resultado(y):
+    max_value = max(y)
+    max_index = list(y).index(max_value)
+    return max_index
+
 
 class RedNeuronal:
 
@@ -38,34 +43,63 @@ class RedNeuronal:
                 self.layers.append(Capa(layers_def[num_capa], layers_def[num_capa - 1]))
         self.num_layers = len(self.layers)
 
-    def normalizar(self, imagenes):
+    def normalizar(self):
         salida = []
-        for imagen in imagenes:
+        for imagen in self.datos:
             img = []
             for pixel in range(784):
                 img.append(imagen[pixel] / 255)
             salida.append(img)
         return salida
 
+    def predecir(self, datos):
+        tags_interna = []
+        for img in datos:
+            tags_interna.append(self.prediccion(img))
+        return tags_interna
+
     def prediccion(self, imagen):
         salida = [imagen]
         for i in range(self.num_layers): salida.append([])
         for layer in range(self.num_layers):
-            salida[layer + 1] = np.append(salida[layer + 1], self.layers[layer].prediccionSigmoide(salida[layer]))
+            salida[layer + 1] = np.append(salida[layer + 1], self.layers[layer].predecir(salida[layer]))
         return salida
 
-    def backpropagation(self, y, x, label):
+    def activacion(self):
+        salida = []
+        for i in range(self.num_layers): salida.append([])
         for layer in range(self.num_layers):
-            self.layers[layer].correccion(y[layer], x, label)
-            pass
+            salida[layer] = self.layers[layer].activacionSigmoide()
+        return salida
 
-    def entrenamiento(self, imagen, labels, lr, numEpoch):
-        lr = self.learning_rate
-        # entrada = self.normalizar(imagen)
+    def error(self, label, y):
+        err = []
+        prediccion = resultado(y[-1])
+        for i in range(self.layers[-1].num_neuronas):
+            err.append(label - prediccion)
+        return err
+
+    def backpropagation(self, error, y, z):
+        for i in range(len(error)):
+            self.layers[-1].delta[i] = error[i] * derivada_sigmoide(z[-1][i])
+        for layer in reversed(range(1, self.num_layers)):
+            self.layers[layer].propagacion(y[layer], self.layers[layer - 1], z, error)
+
+    def updateW(self, eta, input):
+        for layer in range(self.num_layers):
+            self.layers[layer].correccion(eta, input[layer])
+
+    def entrenamiento(self, imagen, labels, numEpoch):
+        # entrada = self.normalizar()
         for epoch in range(numEpoch):
             # for img, label in zip(entrada, labels):
             for img, label in zip(imagen, labels):
-                y = self.prediccion(img)
-                self.backpropagation(y, img, label)
-        return self.w
+                z = self.prediccion(img)
+                y = self.activacion()
 
+                error_final = self.error(label, y)
+                self.backpropagation(error_final, y, z)
+
+                self.updateW(self.learning_rate, z)
+
+        return [ layer.w for layer in self.layers]
