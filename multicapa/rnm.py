@@ -33,8 +33,8 @@ def resultado(y):
 class RedNeuronal:
 
     def __init__(self, layers_def, datos):
-        self.learning_rate = 0.02
-        self.datos = datos
+        self.learning_rate = 0.00001
+        self.datos = datos; self.normalizar()
         self.layers = []
         for num_capa in range(len(layers_def)):
             if num_capa == 0:
@@ -74,9 +74,10 @@ class RedNeuronal:
 
     def error(self, label, y):
         err = []
-        prediccion = resultado(y[-1])
+        #prediccion = resultado(y[-1])
         for i in range(self.layers[-1].num_neuronas):
-            err.append(label - prediccion)
+            #err.append(label - prediccion)
+            err.append(label - y[-1][i])
         return err
 
     def backpropagation(self, error, y, z):
@@ -89,11 +90,11 @@ class RedNeuronal:
         for layer in range(self.num_layers):
             self.layers[layer].correccion(eta, input[layer])
 
-    def entrenamiento(self, imagen, labels, numEpoch):
+    def entrenamiento(self, labels, numEpoch):
         # entrada = self.normalizar()
         for epoch in range(numEpoch):
             # for img, label in zip(entrada, labels):
-            for img, label in zip(imagen, labels):
+            for img, label in zip(self.datos, labels):
                 z = self.prediccion(img)
                 y = self.activacion()
 

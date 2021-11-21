@@ -10,7 +10,7 @@ def derivada_sigmoide(x):
 class Capa:
 
     def __init__(self, neuronas, tam_entrada):
-        self._w = np.random.uniform(0, 1, (neuronas, tam_entrada))
+        self._w = np.random.uniform(-1, 1, (neuronas, tam_entrada))
         self._num_neuronas = neuronas
         self._z = np.zeros(self._num_neuronas)
         self._y = np.zeros(self._num_neuronas)
